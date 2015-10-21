@@ -4,7 +4,7 @@ python prepare-data.py 2015-08-01 2015-08-31 5 ../ex3/test-data
 
 # Build model
 cd ../ex3
-vm-scale -s train-data-scale-info train-data > train-data.scale
+svm-scale -s train-data-scale-info train-data > train-data.scale
 svm-train -b 1 train-data.scale model/train-model
 
 # Test model
