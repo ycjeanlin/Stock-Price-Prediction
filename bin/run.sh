@@ -1,9 +1,9 @@
 # prepare data
-python prepare-data.py 2015-07-01 2015-07-31 5 ../output/train-data
-python prepare-data.py 2015-08-01 2015-08-31 5 ../output/test-data
+#python prepare-data.py 2015-07-01 2015-07-31 5 ../output/train-data
+#python prepare-data.py 2015-08-01 2015-08-31 5 ../output/test-data
 
 # Build model
-svm-scale -s model/train-data-scale-info ../output/train-data > ../outptu/train-data.scale
+svm-scale model/train-data-scale-info ../output/train-data > ../output/train-data.scale
 svm-train -b 1 ../output/train-data.scale model/train-model
 
 # Test model
