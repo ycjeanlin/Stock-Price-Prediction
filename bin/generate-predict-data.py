@@ -9,7 +9,7 @@ import json
 def process_input(predict_day_str, pre_days_str, predict_data, predict_stock_list, files):
     #[predict-data(YYYY-MM-DD)] [latest n days] [predict-data] [predict-stock-list]
     while predict_day_str + '.json' not in files:
-        date_object = dt.strptime(predict_day_str, '%Y-%m-%d') + datetime.timedelta(days = 1)
+        date_object = dt.strptime(predict_day_str, '%Y-%m-%d') - datetime.timedelta(days = 1)
         predict_day_str = date_object.strftime('%Y-%m-%d')
     start = files.index(predict_day_str + '.json')
 
@@ -22,15 +22,18 @@ if __name__ == '__main__':
     input_file_path = '/home/mlb/res/stock/twse/json/'
     file_list = listdir(input_file_path)
     file_list.sort()
+    print("Input parsing")
     start_day_index, latest_n_days, predict_data_file, predict_stock_list_file = process_input(argv[1], argv[2], argv[3], argv[4], file_list)
-
+    
+    print("Predict data generating")
     data_of_days = []
     ignore_stock_ids = ['id']
     with codecs.open(predict_data_file, 'w') as fw:
         for i in range(latest_n_days):
             data = json.load(codecs.open(input_file_path + file_list[start_day_index - i], 'r'))
             data_of_days.append(data)
-
+        
+        print("Data loading finish")
         predict_data = {}
         stock_list = {}
         feature_list = ['open', 'close', 'high', 'low', 'volume', 'adj_close']
