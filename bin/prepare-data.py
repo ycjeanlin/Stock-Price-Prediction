@@ -36,6 +36,7 @@ if __name__ == '__main__':
             
         for i in range(latest_n_days, end_index - start_index + latest_n_days + 1):
             data = json.load(codecs.open(input_file_path + file_list[end_index - i], 'r'))
+            print(file_list[end_index - i])
             data_of_days.append(data)
             output_data = {}
             for d in range(latest_n_days + 1):
@@ -70,7 +71,7 @@ if __name__ == '__main__':
                         try:
                             output_str = output_str + '\t' + str(f) + ':' + output_data[key][f]
                         except:
-                            print(file_list[i], key, f, output_data[key][f])
+                            print(file_list[end_index - i], key, f, output_data[key][f])
                     fw.write(output_str + '\n')
 
             data_of_days.pop(0)
