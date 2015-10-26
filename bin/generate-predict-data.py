@@ -44,8 +44,8 @@ if __name__ == '__main__':
                         predict_data[key] = []
                         predict_data[key].append(0)
                         stock_list[key] = {}
-                        stock_list[key]['open'] = 0
-                        stock_list[key]['close'] = 0
+                        stock_list[key]['open'] = data[key]['open']
+                        stock_list[key]['close'] = data[key]['close']
                     for f in feature_list:
                         predict_data[key].append(data[key][f])
 
