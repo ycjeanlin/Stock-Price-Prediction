@@ -49,18 +49,26 @@ if __name__ == '__main__':
                     for f in feature_list:
                         predict_data[key].append(data[key][f])
 
+        output_stock_list = {}
+        index = 0
         for key in sorted(predict_data):
             if len(predict_data[key]) == (6 * latest_n_days + 1) and 'NULL' not in predict_data[key]:
                 #fw.write(file_list[end_index - i + latest_n_days] + '\t' + key + '\t' + str(output_data[key][0]))
-                fw.write(str(predict_data[key][0]))
+
                 output_str = ''
                 for f in range(1, len(predict_data[key])):
                     #print(key, f, output_data[key][f])
                     try:
                         output_str = output_str + '\t' + str(f) + ':' + predict_data[key][f]
                     except:
+                        output_str = 'none'
                         print(key, f, predict_data[key][f])
-                fw.write(output_str + '\n')
+
+                if output_str != 'none':
+                    fw.write(str(predict_data[key][0]) + output_str + '\n')
+                    output_stock_list[index]['id'] = key
+                    output_stock_list[index]['open'] = stock_list[key]['open']
+                    output_stock_list[index]['close'] = stock_list[key]['close']
 
     with open(predict_stock_list_file, 'w') as fw:
         json.dump(stock_list, fw)
