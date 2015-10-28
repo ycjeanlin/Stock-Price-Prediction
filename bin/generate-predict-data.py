@@ -50,7 +50,7 @@ if __name__ == '__main__':
                         predict_data[key].append(data[key][f])
 
         output_stock_list = {}
-        index = 0
+        index = 1
         for key in sorted(predict_data):
             if len(predict_data[key]) == (6 * latest_n_days + 1) and 'NULL' not in predict_data[key]:
                 #fw.write(file_list[end_index - i + latest_n_days] + '\t' + key + '\t' + str(output_data[key][0]))
