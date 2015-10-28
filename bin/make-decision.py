@@ -1,6 +1,7 @@
 import codecs
 from sys import argv
 import json
+import operator
 
 
 def read_predict_result(in_file):
@@ -29,15 +30,13 @@ def choose_stocks(result_info):
     actions = {'1':'buy', '-1':'short'}
     for act in actions:
         max_p = 0
-        chosen_stock = 0
+        chosen_stock = {}
         for stock_id in result_info[act]:
-            if result_info[act][stock_id][act] > max_p:
-                chosen_stock = stock_id
-                max_p = result_info[act][stock_id][act]
+            chosen_stock[stock_id] = result_info[act][stock_id][act]
 
-        if chosen_stock != 0:
-            stocks[actions[act]] = []
-            stocks[actions[act]].append(chosen_stock)
+        sorted_stocks = sorted(chosen_stock.items(), key=operator.itemgetter(1), reverse=True)
+
+        stocks[actions[act]] = [sorted_stocks[i][0] for i in range(3)]
 
     return stocks
 
@@ -50,24 +49,25 @@ def make_decision(stocks, predict_stock_list):
     # code, life, type, weight, open_price, close_high_price, close_low_price
     for act in stocks:
         for id in stocks[act]:
-            decision ={}
-            decision['"type"'] = '"' + act + '"'
-            decision['"code"'] = '"' + stock_list[str(id)]['id'] + '"'
-            decision['"weight"'] = str(1)
-            decision['"life"'] = str(1)
+            if float(stock_list[str(id)]['close']) < 100:
+                decision ={}
+                decision['"type"'] = '"' + act + '"'
+                decision['"code"'] = '"' + stock_list[str(id)]['id'] + '"'
+                decision['"weight"'] = str(1)
+                decision['"life"'] = str(1)
 
-            if act == 'buy':
-                decision['"open_price"'] = float(stock_list[str(id)]['close']) * 0.91
-                decision['"close_high_price"'] = '%.2f'%(decision['"open_price"'] * 1.01)
-                decision['"close_low_price"'] = '%.2f'%(decision['"open_price"'] * 0.99)
-                decision['"open_price"'] = '%.2f'%(decision['"open_price"'])
-            elif act == 'short':
-                decision['"open_price"'] = float(stock_list[str(id)]['close']) * 0.91
-                decision['"close_high_price"'] = '%.2f'%(decision['"open_price"'] * 1.01)
-                decision['"close_low_price"'] = '%.2f'%(decision['"open_price"'] * 0.99)
-                decision['"open_price"'] = '%.2f'%(decision['"open_price"'])
+                if act == 'buy':
+                    decision['"open_price"'] = float(stock_list[str(id)]['close']) * 0.91
+                    decision['"close_high_price"'] = '%.2f'%(decision['"open_price"'] * 1.01)
+                    decision['"close_low_price"'] = '%.2f'%(decision['"open_price"'] * 0.99)
+                    decision['"open_price"'] = '%.2f'%(decision['"open_price"'])
+                elif act == 'short':
+                    decision['"open_price"'] = float(stock_list[str(id)]['close']) * 0.91
+                    decision['"close_high_price"'] = '%.2f'%(decision['"open_price"'] * 1.01)
+                    decision['"close_low_price"'] = '%.2f'%(decision['"open_price"'] * 0.99)
+                    decision['"open_price"'] = '%.2f'%(decision['"open_price"'])
 
-            decision_table.append(decision)
+                decision_table.append(decision)
 
     return decision_table
 
@@ -84,6 +84,7 @@ def write_decision(decision_table, out_file):
             decision_str = decision_str + '\t}'
             output_str.append(decision_str)
         fw.write('[\n' + (',\n').join(output_str) + '\n]')
+
 
 if __name__ == '__main__':
     # read predict result
