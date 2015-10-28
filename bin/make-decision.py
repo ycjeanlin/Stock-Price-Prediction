@@ -41,7 +41,7 @@ def choose_stocks(result_info):
     return stocks
 
 
-def make_decision(stocks, predict_stock_list):
+def make_decision(stocks, predict_stock_list, price):
     decision_table = []
     # load predict-stock-list
     stock_list = json.load(codecs.open(predict_stock_list, 'r'))
@@ -49,7 +49,7 @@ def make_decision(stocks, predict_stock_list):
     # code, life, type, weight, open_price, close_high_price, close_low_price
     for act in stocks:
         for id in stocks[act]:
-            if float(stock_list[str(id)]['close']) < 100:
+            if float(stock_list[str(id)]['close']) < price:
                 decision ={}
                 decision['"type"'] = '"' + act + '"'
                 decision['"code"'] = '"' + stock_list[str(id)]['id'] + '"'
@@ -94,7 +94,7 @@ if __name__ == '__main__':
     bought_stocks = choose_stocks(predict_result)
 
     # make decision: life, type, weight, open_price, close_high_price, close_low_price
-    output_decision = make_decision(bought_stocks, argv[2])
+    output_decision = make_decision(bought_stocks, argv[2], 100)
 
     # output chosen stocks
     write_decision(output_decision, argv[3])
