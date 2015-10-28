@@ -41,7 +41,7 @@ def choose_stocks(result_info):
     return stocks
 
 
-def make_decision(stocks, predict_stock_list, price):
+def make_decision(stocks, predict_stock_list, highest_price, lowest_price):
     decision_table = []
     # load predict-stock-list
     stock_list = json.load(codecs.open(predict_stock_list, 'r'))
@@ -49,7 +49,8 @@ def make_decision(stocks, predict_stock_list, price):
     # code, life, type, weight, open_price, close_high_price, close_low_price
     for act in stocks:
         for id in stocks[act]:
-            if float(stock_list[str(id)]['close']) < price:
+            base_price = float(stock_list[str(id)]['close'])
+            if base_price <= highest_price and base_price >= lowest_price:
                 decision ={}
                 decision['"type"'] = '"' + act + '"'
                 decision['"code"'] = '"' + stock_list[str(id)]['id'] + '"'
@@ -57,12 +58,12 @@ def make_decision(stocks, predict_stock_list, price):
                 decision['"life"'] = str(1)
 
                 if act == 'buy':
-                    decision['"open_price"'] = float(stock_list[str(id)]['close']) * 0.91
+                    decision['"open_price"'] = base_price * 0.91
                     decision['"close_high_price"'] = '%.2f'%(decision['"open_price"'] * 1.01)
                     decision['"close_low_price"'] = '%.2f'%(decision['"open_price"'] * 0.99)
                     decision['"open_price"'] = '%.2f'%(decision['"open_price"'])
                 elif act == 'short':
-                    decision['"open_price"'] = float(stock_list[str(id)]['close']) * 0.91
+                    decision['"open_price"'] = base_price * 0.91
                     decision['"close_high_price"'] = '%.2f'%(decision['"open_price"'] * 1.01)
                     decision['"close_low_price"'] = '%.2f'%(decision['"open_price"'] * 0.99)
                     decision['"open_price"'] = '%.2f'%(decision['"open_price"'])
@@ -94,7 +95,7 @@ if __name__ == '__main__':
     bought_stocks = choose_stocks(predict_result)
 
     # make decision: life, type, weight, open_price, close_high_price, close_low_price
-    output_decision = make_decision(bought_stocks, argv[2], 100)
+    output_decision = make_decision(bought_stocks, argv[2], 100, 7)
 
     # output chosen stocks
     write_decision(output_decision, argv[3])
