@@ -9,7 +9,7 @@ def read_predict_result(in_file):
         index = 0
         header = []
         for row in fr:
-            cols = row.strip().split('\t')
+            cols = row.strip().split(' ')
             if index == 0:
                 header.append(cols[0])
                 for c in range(1, len(cols)):
@@ -52,18 +52,20 @@ def make_decision(stocks, predict_stock_list):
         for id in stocks[act]:
             decision ={}
             decision['"type"'] = '"' + act + '"'
-            decision['"code"'] = '"' + stock_list[id]['id'] + '"'
-            decision['"weight"'] = 1
-            decision['"life"'] = 1
+            decision['"code"'] = '"' + stock_list[str(id)]['id'] + '"'
+            decision['"weight"'] = str(1)
+            decision['"life"'] = str(1)
 
             if act == 'buy':
-                decision['"open_price"'] = float(stock_list[id]['"close"']) * 0.91
-                decision['"close_high_price"'] = decision['"open_price"'] * 1.01
-                decision['"close_low_price"'] = decision['"open_price"'] * 0.99
+                decision['"open_price"'] = float(stock_list[str(id)]['close']) * 0.91
+                decision['"close_high_price"'] = '%.2f'%(decision['"open_price"'] * 1.01)
+                decision['"close_low_price"'] = '%.2f'%(decision['"open_price"'] * 0.99)
+                decision['"open_price"'] = '%.2f'%(decision['"open_price"'])
             elif act == 'short':
-                decision['"open_price"'] = float(stock_list[id]['close']) * 0.91
-                decision['"close_high_price"'] = decision['"open_price"'] * 1.01
-                decision['"close_low_price"'] = decision['"open_price"'] * 0.99
+                decision['"open_price"'] = float(stock_list[str(id)]['close']) * 0.91
+                decision['"close_high_price"'] = '%.2f'%(decision['"open_price"'] * 1.01)
+                decision['"close_low_price"'] = '%.2f'%(decision['"open_price"'] * 0.99)
+                decision['"open_price"'] = '%.2f'%(decision['"open_price"'])
 
             decision_table.append(decision)
 
@@ -77,8 +79,9 @@ def write_decision(decision_table, out_file):
         for decision in decision_table:
             decision_str = '\t{\n'
             for f in features:
+                print(decision[f])
                 decision_str = decision_str + '\t\t' + f + ': ' + decision[f] + ',\n'
-            decision_str = '\t}'
+            decision_str = decision_str + '\t}'
             output_str.append(decision_str)
         fw.write('[\n' + (',\n').join(output_str) + '\n]')
 
