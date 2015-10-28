@@ -71,6 +71,7 @@ if __name__ == '__main__':
                     output_stock_list[index]['id'] = key
                     output_stock_list[index]['open'] = stock_list[key]['open']
                     output_stock_list[index]['close'] = stock_list[key]['close']
+                    index += 1
 
     with open(predict_stock_list_file, 'w') as fw:
-        json.dump(stock_list, fw)
+        json.dump(output_stock_list, fw)
