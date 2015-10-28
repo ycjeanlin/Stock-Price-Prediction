@@ -61,11 +61,13 @@ if __name__ == '__main__':
                     try:
                         output_str = output_str + '\t' + str(f) + ':' + predict_data[key][f]
                     except:
-                        output_str = 'none'
+                        output_str = 'error'
                         print(key, f, predict_data[key][f])
+                        break
 
-                if output_str != 'none':
+                if output_str != 'error':
                     fw.write(str(predict_data[key][0]) + output_str + '\n')
+                    output_stock_list[index] = {}
                     output_stock_list[index]['id'] = key
                     output_stock_list[index]['open'] = stock_list[key]['open']
                     output_stock_list[index]['close'] = stock_list[key]['close']
