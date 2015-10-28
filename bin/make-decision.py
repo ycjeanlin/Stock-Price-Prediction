@@ -80,7 +80,7 @@ def write_decision(decision_table, out_file):
         for decision in decision_table:
             decision_str = '\t{\n'
             for f in features:
-                print(decision[f])
+                #print(decision[f])
                 decision_str = decision_str + '\t\t' + f + ': ' + decision[f] + ',\n'
             decision_str = decision_str + '\t}'
             output_str.append(decision_str)
