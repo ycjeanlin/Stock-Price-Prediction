@@ -79,13 +79,13 @@ def write_decision(decision_table, out_file):
         output_str = []
         for decision in decision_table:
             decision_str = '\t{\n'
+            info = []
             for f in features:
                 #print(decision[f])
-                decision_str = decision_str + '\t\t' + f + ': ' + decision[f] + ',\n'
-            decision_str = decision_str + '\t}'
+                info.append('\t\t' + f + ': ' + decision[f])
+            decision_str = decision_str + (',\n').join(info) + '\n\t}'
             output_str.append(decision_str)
         fw.write('[\n' + (',\n').join(output_str) + '\n]')
-
 
 if __name__ == '__main__':
     # read predict result
