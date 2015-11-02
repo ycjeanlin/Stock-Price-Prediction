@@ -33,10 +33,9 @@ def choose_stocks(result_info):
         chosen_stock = {}
         for stock_id in result_info[act]:
             chosen_stock[stock_id] = result_info[act][stock_id][act]
-
-        sorted_stocks = sorted(chosen_stock.items(), key=operator.itemgetter(1), reverse=True)
-
-        stocks[actions[act]] = [sorted_stocks[i][0] for i in range(3)]
+        if len(chosen_stock) > 0 :
+            sorted_stocks = sorted(chosen_stock.items(), key=operator.itemgetter(1), reverse=True)
+            stocks[actions[act]] = [sorted_stocks[i][0] for i in range(len(sorted_stocks))]
 
     return stocks
 
@@ -48,7 +47,10 @@ def make_decision(stocks, predict_stock_list, highest_price, lowest_price):
 
     # code, life, type, weight, open_price, close_high_price, close_low_price
     for act in stocks:
+        index = 0
         for id in stocks[act]:
+            if index  > 2:
+                break
             base_price = float(stock_list[str(id)]['close'])
             if base_price <= highest_price and base_price >= lowest_price:
                 decision ={}
@@ -69,6 +71,7 @@ def make_decision(stocks, predict_stock_list, highest_price, lowest_price):
                     decision['"open_price"'] = '%.2f'%(decision['"open_price"'])
 
                 decision_table.append(decision)
+                index += 1
 
     return decision_table
 
@@ -95,7 +98,7 @@ if __name__ == '__main__':
     bought_stocks = choose_stocks(predict_result)
 
     # make decision: life, type, weight, open_price, close_high_price, close_low_price
-    output_decision = make_decision(bought_stocks, argv[2], 100, 7)
+    output_decision = make_decision(bought_stocks, argv[2], 300, 10)
 
     # output chosen stocks
     write_decision(output_decision, argv[3])

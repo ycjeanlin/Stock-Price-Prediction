@@ -64,15 +64,18 @@ if __name__ == '__main__':
             for key in sorted(output_data):    
                 if len(output_data[key]) == (6 * latest_n_days + 1) and 'NULL' not in output_data[key]: 
                     #fw.write(file_list[end_index - i + latest_n_days] + '\t' + key + '\t' + str(output_data[key][0]))
-                    fw.write(str(output_data[key][0]))
                     output_str = ''
                     for f in range(1, len(output_data[key])):
                         #print(key, f, output_data[key][f])
                         try:
                             output_str = output_str + '\t' + str(f) + ':' + output_data[key][f]
                         except:
+                            output_str = 'none'
                             print(file_list[end_index - i], key, f, output_data[key][f])
-                    fw.write(output_str + '\n')
+                            break
+                    if output_str != 'none':
+                        fw.write(str(output_data[key][0]))
+                        fw.write(output_str + '\n')
 
             data_of_days.pop(0)
 

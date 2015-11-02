@@ -62,7 +62,7 @@ if __name__ == '__main__':
                         output_str = output_str + '\t' + str(f) + ':' + predict_data[key][f]
                     except:
                         output_str = 'error'
-                        print(key, f, predict_data[key][f])
+                        #print(key, f, predict_data[key][f])
                         break
 
                 if output_str != 'error':

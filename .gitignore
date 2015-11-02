@@ -5,5 +5,5 @@ output/*
 commit/*
 bin/model/*
 git_cmd.txt
-*.png
 *.out
+train.sh
